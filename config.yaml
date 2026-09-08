@@ -1,0 +1,8 @@
+spectrometer:
+  serial_number: "QEPB0542"
+
+acquisition:
+  integration_time_us: 10000
+  scans_to_average: 20
+  runs_to_make: 1
+  notes: "MachZehnInteMeasurement"
