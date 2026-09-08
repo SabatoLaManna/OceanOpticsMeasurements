@@ -39,3 +39,5 @@ in further steps. Do this for both your reference, and MZI measurements.
 It is possible that you may have to update the `serial_letters` variable to match the letters of your serial number, as to follow the expected file format.
 #### Removal of the coupler's effect
 Ocean Optics spectrometer meausure intensity in a linear scale, which is why you need to run the `GratingCouplerRemoval_Linear.py` script, you will first be prompted to select the stitched `.csv` file of your grating couplers, and then the `.csv` file of your stitched MZI measurements. after this you will see a graph with the cosine model, as well as an output of all the variables extracted by the data. 
+#### Converting dBm to mW
+I know that the logaritmic methods are a bit buggy, this is because the main analyzation script expects linear results. You can change your data from dBm to mW using the 'dBmTomW.py' script.
