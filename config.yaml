@@ -1,5 +1,5 @@
 spectrometer:
-  serial_number: "QEPB0542"
+  serial_number: "SERIALNUMBERHERE"
 
 acquisition:
   integration_time_us: 10000

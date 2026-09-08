@@ -204,6 +204,11 @@ filename = input("Enter file name here (NO EXTENSIONS)\n>>>>")
 
 output_file = rf"data\normalizedspectra\normalized_mzi_{filename}.csv"
 
+normalized_df.to_csv(
+    output_file,
+    index=False
+)
+
 print(f"Saved: {output_file}")
 
 def load_config():

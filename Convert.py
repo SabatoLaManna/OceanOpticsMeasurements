@@ -8,8 +8,8 @@
 
 import csv
 
-input_file = "MZI_Ref.txt"
-output_file = "MZI_Ref.csv"
+input_file = "TEXTFILE.txt"
+output_file = "CSVFILE.csv"
 
 headers = ["wavelength", "Intensity"]
 

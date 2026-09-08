@@ -58,7 +58,7 @@ def fit_mzi_csv(
 
     intensity_smooth = gaussian_filter1d(
         intensity,
-        sigma=3.5
+        sigma=1
     )
 
     
@@ -70,7 +70,7 @@ def fit_mzi_csv(
 
     D0 = np.mean(intensity_smooth)
 
-    period_guess = 22.0
+    period_guess = 0.5
     B0 = 2 * np.pi / period_guess
     C0 = 0
 
@@ -83,27 +83,36 @@ def fit_mzi_csv(
         np.percentile(intensity, 90)
     ] = 0.3
 
-    
+    x = wavelength-wavelength.mean()
+    y = intensity_smooth - np.mean(intensity_smooth)
 
+    dx = np.mean(np.diff(x))
+
+    freqs = np.fft.rfftfreq(len(y), dx)
+    fft_mag = np.abs(np.fft.rfft(y))
+
+    peak = np.argmax(fft_mag[1:]) + 1
+
+    freq0 = freqs[peak]
+    B0 = 2*np.pi*freq0
+
+    print("FFT B0 =", B0)
+    print("FFT FSR =", 2*np.pi/B0)
     popt, pcov = curve_fit(
         model,
-        wavelength,
+        x,
         intensity_smooth,
-        sigma=1 / weights,
-        absolute_sigma=False,
         p0=[A0, B0, C0, D0],
         maxfev=100000
     )
 
     A, B, C, D = popt
-
-    A *= 1.10
-    C -= B * 0.5
+    print(popt)
 
 
 
     fit = model(
-        wavelength,
+        x,
         A,
         B,
         C,
@@ -157,6 +166,16 @@ def fit_mzi_csv(
         /
         (Imax + Imin)
     )
+    lambda0 = np.mean(wavelength)   # nm
+    fsr = 2*np.pi/abs(B)            # nm
+
+    deltaL_um = float(input("What is the delta_L in um?\n>>>>>  "))
+
+    if deltaL_um ==0:
+        ng = "Skipped"
+    else:
+        deltaL_nm = deltaL_um * 1000
+        ng = f"{(lambda0**2 / (fsr * deltaL_nm)):.4f}"
 
 
     results = {
@@ -171,7 +190,7 @@ def fit_mzi_csv(
         "D_error": errors[3],
 
         "FSR": fsr,
-
+        "Ng": ng,
         "Imax": Imax,
         "Imin": Imin,
 
@@ -201,7 +220,8 @@ D = {D:.6f} ± {errors[3]:.6f}
 DERIVED VALUES
 ==================================================
 
-FSR)     = {fsr:.6f}
+FSR          = {fsr:.6f}
+Ng           = {ng}
 Imax         = {Imax:.6f}
 Imin         = {Imin:.6f}
 PeakToPeak   = {2*abs(A):.6f}
@@ -239,7 +259,7 @@ RMSE/A (%)   = {rmsea:.6f}
         )
 
         y_fit = model(
-            x_fit,
+            x_fit-wavelength.mean(),
             A,
             B,
             C,
