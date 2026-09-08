@@ -7,7 +7,7 @@ from tkinter import filedialog
 from pathlib import Path
 import re
 
-
+serial_letters = "QEPB"
 
 root = tk.Tk()
 root.withdraw()
@@ -28,7 +28,7 @@ for file_path in file_paths:
 
     filename = Path(file_path).stem
 
-    match = re.search(r'QEPB\d+_(\d+)', filename)
+    match = re.search(rf'{serial_letters}\d+_(\d+)', filename)
 
     if not match:
         print(f"Could not extract wavelength from {filename}")
