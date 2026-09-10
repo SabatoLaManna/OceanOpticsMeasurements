@@ -149,7 +149,7 @@ normalized_intensity = (
 intensity = hampel_filter(
     normalized_intensity,
     window_size=10,
-    n_sigma=3
+    n_sigma=load_config()['Analysis']['HempelSmoothing']
 )
 
 

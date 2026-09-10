@@ -6,3 +6,7 @@ acquisition:
   scans_to_average: 20
   runs_to_make: 1
   notes: "MachZehnInteMeasurement"
+
+Analysis:
+  GaussianSmoothing: 2
+  HampelSmoothing: 2

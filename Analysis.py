@@ -6,7 +6,13 @@ import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter1d
 from scipy.optimize import curve_fit
 from datetime import datetime
+import yaml
 
+CONFIG_FILE = r"config.yaml"
+
+def load_config():
+    with open(CONFIG_FILE, "r") as config:
+        return yaml.safe_load(config)
 
 
 
@@ -58,7 +64,7 @@ def fit_mzi_csv(
 
     intensity_smooth = gaussian_filter1d(
         intensity,
-        sigma=1
+        sigma=load_config()['Analysis']['GaussianSmoothing']
     )
 
     
@@ -169,7 +175,7 @@ def fit_mzi_csv(
     lambda0 = np.mean(wavelength)   # nm
     fsr = 2*np.pi/abs(B)            # nm
 
-    deltaL_um = float(input("What is the delta_L in um?\n>>>>>  "))
+    deltaL_um = float(input("What is the delta_L in um? enter 0 to skip the ng calculation.\n>>>>>  "))
 
     if deltaL_um ==0:
         ng = "Skipped"
@@ -235,6 +241,8 @@ R²           = {r_squared:.6f}
 Adjusted R²  = {adj_r2:.6f}
 RMSE         = {rmse:.6f}
 RMSE/A (%)   = {rmsea:.6f}
+
+Note: The RMSE/A is the RMSE applied to the Amplitude, and will return a percentage. The closer to 0 this is, the better the fit explains the model.
 """
 
     print(results_txt)
